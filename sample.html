@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- <meta charset="UTF-8"> -->
+        <!-- <meta name="viewport" content="width=device-width",initia-scale=1> -->
+        <!--  -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+        <title>Document</title>
+    </head>
+    <body>
+        <button id="btnGiveCommand">GiveCommand!</button>
+        <br><br>
+        <span id="message"></span>
+        <br><br>
+
+        <input id="checkSteve" type="checkbox"> Steve Rogers
+        <br>
+        <input id="checkTony" type="checkbox"> Tony Starks
+        <br>
+        <input id="checkBruce" type="checkbox"> Bruce Banner
+        <br>
+        <input id="checkNick" type="checkbox"> Nick Fury
+
+        
+
+        <script>
+            let data = JSON.stringify({
+                "query": "Where to stay in Singapore?"
+            });
+
+            let config = {
+                method: 'post',
+                maxBodyLength: Infinity,
+                url: 'https://rag.aem-dev.com/chat',
+                headers: { 
+                    'Content-Type': 'application/json'
+                },
+                data : data
+            };
+
+            alert('sebelum axios call')
+            axios.request(config)
+                .then((response) => {
+                    alert('sukses')
+                    console.log(JSON.stringify(response.data));
+                })
+                .catch((error) => {
+                    alert('error')
+                    console.log(error);
+                });
+            var message = document.querySelector('#message')
+            var speechRecognition = speechRecognition || webkitSpeechRecognition;
+            var speechGrammarList = speechGrammarList || webkitSpeechGrammarList;
+
+            var grammar = '#JSGF V1.0';
+            
+            var recognition = new speechRecognition();
+            var speechRecognitionGrammarList = new speechGrammarList();
+            speechRecognitionGrammarList.addFromString(grammar, 1);
+
+            recognition.grammars = speechRecognitionGrammarList;
+            recognition.lang ='en-US';
+            recognition.interimResults = false;
+
+          
+
+
+            recognition.onresult = function (event) {
+                var last = event.results.length -1;
+                var command = event.results[last][0].transcript;
+                message.textContent = 'Voice Input: ' + command + '.';
+
+                if(command.toLowerCase() === 'select steve'){
+                    document.querySelector('#checkSteve').checked = true;
+            }
+            else if(command.toLowerCase() === 'select tony'){
+                    document.querySelector('#checkTony').checked = true;
+            }
+             else if(command.toLowerCase() === 'select bruce'){
+                    document.querySelector('#checkBruce').checked = true;
+            }
+             else if(command.toLowerCase() === 'select nick'){
+                    document.querySelector('#checkNick').checked = true;
+            }
+
+
+                if(command.toLowerCase() === 'deselect steve'){
+                    document.querySelector('#checkSteve').checked = false;
+            }
+            else if(command.toLowerCase() === 'deselect tony'){
+                    document.querySelector('#checkTony').checked = false;
+            }
+             else if(command.toLowerCase() === 'deselect bruce'){
+                    document.querySelector('#checkBruce').checked = false;
+            }
+             else if(command.toLowerCase() === 'deselect nick'){
+                    document.querySelector('#checkNick').checked = false;
+            }
+
+
+                };
+
+                recognition.onspeechend = function(){
+                    recognition.stop();
+                }
+
+                recognition.onerror = function (event) {
+                    message.textContent ='Error occured in recognition: ' + event.error;
+                }
+
+                document.querySelector('#btnGiveCommand').addEventListener('click', function(){
+                    recognition.start();
+                })
+            
+        </script>
+    </body>
+</html>

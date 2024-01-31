@@ -1,0 +1,30 @@
+<html>
+<head></head>
+    <body>
+        <textarea id="result" rows=8 cols=30>
+        
+        </textarea>
+        <br>
+        <button id="start">
+            Start
+        </button>
+        <script>
+            const startButton = document.getElementById('start');
+            const resultElement = document.getElementById('result')
+
+            var recognition = new webkitSpeechRecognition()
+
+            recognition.lang = window.navigator.language;
+            recognition.interimResults = true;
+
+            startButton.addEventListener('click',() => {
+                recognition.start();
+            })
+
+            recognition.addEventListener('result', (event) => {
+                const result = event.result[event.result.length-1[0]].transcript;
+                resultElement.textContent = result;
+            })
+        </script>
+    </body>
+</html>
